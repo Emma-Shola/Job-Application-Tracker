@@ -44,7 +44,7 @@ export default function Dashboard() {
 
       const API_URL = import.meta.env.VITE_API_URL;
       
-      const res = await fetch(`${API_URL}/api/jobs`, {
+      const res = await fetch(`${API_URL}`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
