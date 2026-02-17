@@ -13,6 +13,8 @@ function App() {
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        {/* Catch-all route - redirects any unknown path to home or auth */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
