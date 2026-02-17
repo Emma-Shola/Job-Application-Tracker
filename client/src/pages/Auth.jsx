@@ -20,8 +20,10 @@ export default function Auth() {
     try {
       console.log('🔍 Sending request to:', `${API_URL}/api/auth/${endpoint}`)
       console.log('📦 Request body:', body)
+
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
       
-      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
