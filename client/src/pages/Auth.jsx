@@ -18,10 +18,10 @@ export default function Auth() {
       : { name: form.name, email: form.email, password: form.password }
 
     try {
-      console.log('🔍 Sending request to:', `http://localhost:5000/api/auth/${endpoint}`)
+      console.log('🔍 Sending request to:', `${API_URL}/api/auth/${endpoint}`)
       console.log('📦 Request body:', body)
       
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)

@@ -45,3 +45,11 @@ coverage/
 # package-lock.json
 # client/package-lock.json
 # server/package-lock.json
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+client/.env*
+server/.env*
