@@ -18,10 +18,11 @@ export default function Auth() {
       : { name: form.name, email: form.email, password: form.password }
 
     try {
+       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
       console.log('🔍 Sending request to:', `${API_URL}/api/auth/${endpoint}`)
       console.log('📦 Request body:', body)
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+     
       
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
