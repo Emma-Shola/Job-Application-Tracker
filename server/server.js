@@ -47,23 +47,16 @@ const allowedOrigins = [
 ].filter(Boolean); // Remove undefined values
 
 // CORS middleware
+const cors = require('cors');
+
+// Allow ALL origins temporarily for testing (USE THIS FIRST TO CONFIRM IT WORKS)
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, etc)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true,
+  origin: '*', // TEMPORARY - allows all origins
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Handle preflight requests
+// For preflight requests
 app.options('*', cors());
 app.use(express.json())
 
