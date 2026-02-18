@@ -18,7 +18,7 @@ if (fs.existsSync(envPath)) {
   require('dotenv').config();
 }
 
-// Debug - remove after confirming it works
+// Debug environment
 console.log('✅ Environment loaded:');
 console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
 console.log(`   MONGO_URI: ${process.env.MONGO_URI ? 'Found ✓' : 'Missing ✗'}`);
@@ -38,7 +38,7 @@ const analyticsRoutes = require('./routes/analytics');
 const app = express();
 
 // =============================================
-// FIXED CORS CONFIGURATION - NO '*'
+// CORS CONFIGURATION - COMPLETELY FIXED
 // =============================================
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -48,7 +48,7 @@ const allowedOrigins = [
   'http://localhost:5000'
 ].filter(Boolean);
 
-// CORS middleware - NOT using '*' to avoid path-to-regexp error
+// CORS middleware
 app.use(cors({
   origin: function(origin, callback) {
     // Allow requests with no origin (like mobile apps, curl)
@@ -66,7 +66,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ FIXED: Handle preflight requests WITHOUT using '*'
+// Handle preflight requests - NO '*', just a function
 app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Origin', req.headers.origin || allowedOrigins[0] || '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
@@ -78,7 +78,7 @@ app.options('*', (req, res) => {
 // Body parser middleware
 app.use(express.json());
 
-// Request logging middleware
+// Request logging
 app.use((req, res, next) => {
   console.log(`📥 ${req.method} ${req.url} - Origin: ${req.headers.origin || 'No origin'}`);
   next();
@@ -117,7 +117,7 @@ app.get('/', (req, res) => {
   res.send('Job Application Tracker API is running');
 });
 
-// Health check endpoint (useful for Render)
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
@@ -194,7 +194,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler for routes that don't exist
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
@@ -215,7 +215,6 @@ server.listen(PORT, '0.0.0.0', () => {
 // =============================================
 // PROCESS HANDLERS
 // =============================================
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.log('❌ UNHANDLED REJECTION! Shutting down...');
   console.log(err.name, err.message);
@@ -224,7 +223,6 @@ process.on('unhandledRejection', (err) => {
   });
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.log('❌ UNCAUGHT EXCEPTION! Shutting down...');
   console.log(err.name, err.message);
