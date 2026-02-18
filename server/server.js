@@ -47,7 +47,7 @@ const allowedOrigins = [
 ].filter(Boolean); // Remove undefined values
 
 // CORS middleware
-const cors = require('cors');
+
 
 // Allow ALL origins temporarily for testing (USE THIS FIRST TO CONFIRM IT WORKS)
 app.use(cors({
