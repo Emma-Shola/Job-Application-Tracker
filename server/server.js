@@ -38,10 +38,33 @@ const analyticsRoutes = require('./routes/analytics')
 const app = express()
 
 // Middleware
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://job-application-tracker-1-drsa.onrender.com', // Your frontend URL
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5000'
+].filter(Boolean); // Remove undefined values
+
+// CORS middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true
-}))
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Handle preflight requests
+app.options('*', cors());
 app.use(express.json())
 
 // Database connection
