@@ -19,7 +19,7 @@ export default function Auth() {
 
     try {
        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-      console.log('🔍 Sending request to:', `${API_URL}api/auth/${endpoint}`)
+      console.log('🔍 Sending request to:', `${API_URL}/api/auth/${endpoint}`)
       console.log('📦 Request body:', body)
 
      
