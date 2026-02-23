@@ -18,31 +18,31 @@ export default function Auth() {
       : { name: form.name, email: form.email, password: form.password }
 
     try {
-       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-      console.log('🔍 Sending request to:', `${API_URL}/api/auth/${endpoint}`)
-      console.log('📦 Request body:', body)
-
-     
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      // ✅ FIX: API_BASE_URL should NOT include /api
       
-      const res = await fetch(`${API_URL}${endpoint}`, {
+      // ✅ FIX: Add /api/ in the fetch URL
+      const url = `${API_BASE_URL}/api/auth/${endpoint}`
+      console.log('🔍 Sending request to:', url)
+      console.log('📦 Request body:', body)
+      
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       })
 
       const data = await res.json()
-      console.log('📥 Full response:', data) // Debug log
+      console.log('📥 Full response:', data)
       
       if (!res.ok) {
-        // Check different error message locations
         const errorMsg = data.msg || data.message || data.error || 'Authentication failed'
         throw new Error(errorMsg)
       }
 
-      // 🔥 CRITICAL: Check ALL possible locations for the token
+      // 🔥 Check for token in response
       let token = null
       
-      // Try common token locations
       if (data.token) {
         token = data.token
         console.log('✅ Token found at: data.token')
@@ -52,25 +52,14 @@ export default function Auth() {
       } else if (data.accessToken) {
         token = data.accessToken
         console.log('✅ Token found at: data.accessToken')
-      } else if (data.access_token) {
-        token = data.access_token
-        console.log('✅ Token found at: data.access_token')
-      } else if (data.auth?.token) {
-        token = data.auth.token
-        console.log('✅ Token found at: data.auth.token')
       }
-      
-      console.log('🔑 Token to store:', token ? token.substring(0, 30) + '...' : 'UNDEFINED')
-      console.log('📏 Token length:', token?.length)
       
       if (token) {
         localStorage.setItem('token', token)
         console.log('💾 Token stored in localStorage')
         navigate('/')
       } else {
-        console.error('❌ No token found in response. Full response:', data)
-        // Save the response for debugging
-        localStorage.setItem('last_auth_response', JSON.stringify(data))
+        console.error('❌ No token found in response:', data)
         throw new Error('Authentication succeeded but no token received')
       }
     } catch (err) {
